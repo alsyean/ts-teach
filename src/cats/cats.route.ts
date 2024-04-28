@@ -98,5 +98,114 @@ router.post(`/cats`, (req: Request, res:Response) => {
 
 })
 
+// 특정 고양이 정보 수정
+router.put(`/cats/:id`, (req: Request, res: Response) => {
+    const params = req.params;
+    const body = req.body;
+
+    try {
+        let cat =  Cat.find( (v) => v.id === params.id);
+
+        if (cat === undefined ) {
+            let errorMessage  = `${params.id} is empty`
+            throw  new HttpError(errorMessage, 500)
+        } else {
+            cat = body
+        }
+
+        res.status(200).send( {
+            success: true,
+            data : cat
+        })
+
+    } catch ( error ) {
+        if (error instanceof HttpError) {
+            res.status(error.status).send({
+                success: false,
+                error: error.message
+            });
+        } else {
+            // 예상치 못한 에러 처리
+            res.status(500).send({
+                success: false,
+                error: "Internal Server Error"
+            });
+        }
+    }
+
+})
+
+// 특정 고양이 부분적 정보 수정
+router.patch(`/cats/:id`, (req: Request, res: Response) => {
+    const params = req.params;
+    const body = req.body;
+
+    try {
+        let cat =  Cat.find( (v) => v.id === params.id);
+
+        if (cat === undefined ) {
+            let errorMessage  = `${params.id} is empty`
+            throw  new HttpError(errorMessage, 500)
+        } else {
+            cat = {...cat, ...body}
+        }
+
+        res.status(200).send( {
+            success: true,
+            data : cat
+        })
+
+    } catch ( error ) {
+        if (error instanceof HttpError) {
+            res.status(error.status).send({
+                success: false,
+                error: error.message
+            });
+        } else {
+            // 예상치 못한 에러 처리
+            res.status(500).send({
+                success: false,
+                error: "Internal Server Error"
+            });
+        }
+    }
+
+})
+
+// 특정 고양이 삭제
+router.delete(`/cats/:id`, (req: Request, res: Response) => {
+    const params = req.params;
+    const body = req.body;
+
+    try {
+        let cat =  Cat.find( (v) => v.id === params.id);
+
+        if (cat === undefined ) {
+            let errorMessage  = `${params.id} is empty`
+            throw  new HttpError(errorMessage, 500)
+        }
+
+        res.status(200).send( {
+            success: true,
+            data : Cat.filter((v) => v.id === body.id)
+        })
+
+    } catch ( error ) {
+        if (error instanceof HttpError) {
+            res.status(error.status).send({
+                success: false,
+                error: error.message
+            });
+        } else {
+            // 예상치 못한 에러 처리
+            res.status(500).send({
+                success: false,
+                error: "Internal Server Error"
+            });
+        }
+    }
+
+})
+
 
 export default router
